@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f3f7fb">
+  <title>Functional To-Do App with Filtering</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-copy">
+        <p class="eyebrow">Productivity workspace</p>
+        <h1>Functional To-Do App</h1>
+        <p class="subtitle">Organize daily work with fast entry, smart filtering, and local persistence.</p>
+      </div>
+
+      <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">
+        Dark mode
+      </button>
+    </header>
+
+    <main class="workspace" aria-label="To-do manager">
+      <section class="composer" aria-labelledby="composerTitle">
+        <h2 class="sr-only" id="composerTitle">Add a new task</h2>
+
+        <form id="taskForm" class="task-form" autocomplete="off" novalidate>
+          <label class="sr-only" for="taskInput">Task title</label>
+          <input
+            id="taskInput"
+            class="task-input"
+            type="text"
+            name="task"
+            placeholder="Add a new task and press Enter"
+            maxlength="160"
+            aria-describedby="taskInputHelp"
+          >
+          <button id="addTaskButton" class="add-btn" type="submit">Add task</button>
+        </form>
+
+        <p class="helper-text" id="taskInputHelp">Quick entry is supported with the Enter key.</p>
+
+        <div class="toolbar">
+          <div class="filters" role="tablist" aria-label="Task filters">
+            <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true">All tasks</button>
+            <button class="filter-btn" type="button" data-filter="active" aria-pressed="false">Active tasks</button>
+            <button class="filter-btn" type="button" data-filter="completed" aria-pressed="false">Completed tasks</button>
+          </div>
+
+          <div class="task-meta">
+            <span id="taskCount" aria-live="polite">0 tasks left</span>
+            <button id="clearCompleted" class="clear-btn" type="button" disabled>Clear completed</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="task-panel" aria-labelledby="taskListTitle">
+        <h2 class="sr-only" id="taskListTitle">Tasks</h2>
+
+        <ul id="taskList" class="task-list" aria-live="polite" aria-relevant="additions removals"></ul>
+
+        <div id="emptyState" class="empty-state" hidden>
+          <div class="empty-illustration" aria-hidden="true">
+            <span class="empty-circle"></span>
+            <span class="empty-card empty-card-a"></span>
+            <span class="empty-card empty-card-b"></span>
+            <span class="empty-check"></span>
+          </div>
+          <div class="empty-copy">
+            <h3 id="emptyStateTitle">No tasks yet</h3>
+            <p id="emptyStateMessage">Add your first task above to start building your day.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

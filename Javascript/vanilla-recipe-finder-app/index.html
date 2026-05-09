@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Finder - Discover Amazing Meals</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">Recipe Finder</h1>
+                <p class="header-subtitle">Discover delicious meals from around the world</p>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search meals by name..."
+                    autocomplete="off"
+                >
+                <button id="searchBtn" class="search-button">
+                    <span class="search-button-text">Search</span>
+                </button>
+            </div>
+            <div class="search-hint">Press Enter or click Search to find recipes</div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section">
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="loading-spinner hidden">
+                <div class="spinner"></div>
+                <p>Loading recipes...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-icon">🍽️</div>
+                <h3>No recipes yet</h3>
+                <p>Search for meals to discover amazing recipes</p>
+            </div>
+
+            <!-- No Results State -->
+            <div id="noResultsState" class="no-results hidden">
+                <div class="no-results-icon">🔍</div>
+                <h3>No recipes found</h3>
+                <p id="noResultsMessage">Try searching with different keywords</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="error-state hidden">
+                <div class="error-icon">⚠️</div>
+                <h3>Oops! Something went wrong</h3>
+                <p id="errorMessage">Failed to fetch recipes. Please try again.</p>
+            </div>
+
+            <!-- Recipes Grid -->
+            <div id="recipesGrid" class="recipes-grid"></div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Recipe Finder. Powered by <a href="https://www.themealdb.com/" target="_blank" rel="noopener noreferrer">TheMealDB API</a></p>
+        </footer>
+    </div>
+
+    <!-- Recipe Details Modal -->
+    <div id="recipeModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button id="closeModalBtn" class="modal-close-btn">×</button>
+            
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img id="modalMealImage" class="modal-meal-image" src="" alt="Recipe">
+                </div>
+
+                <div class="modal-details">
+                    <h2 id="modalMealName" class="modal-meal-name"></h2>
+                    <div class="modal-meta">
+                        <span id="modalMealCategory" class="modal-category"></span>
+                    </div>
+
+                    <div class="modal-section">
+                        <h3 class="modal-section-title">Ingredients</h3>
+                        <ul id="modalIngredientsList" class="ingredients-list"></ul>
+                    </div>
+
+                    <div class="modal-section">
+                        <h3 class="modal-section-title">Instructions</h3>
+                        <p id="modalInstructions" class="modal-instructions"></p>
+                    </div>
+
+                    <div id="youtubeSection" class="modal-section hidden">
+                        <a id="youtubeLink" class="youtube-button" href="#" target="_blank" rel="noopener noreferrer">
+                            ▶ Watch on YouTube
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert currencies in real-time with live exchange rates">
+    <title>Currency Converter | Real-Time Exchange Rates</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-icon">💱</span>
+                <h1>Currency Converter</h1>
+            </div>
+            <p class="tagline">Real-time exchange rates at your fingertips</p>
+        </header>
+
+        <main class="converter-card">
+            <!-- Error Message -->
+            <div id="error-container" class="error-container hidden">
+                <span class="error-icon">⚠️</span>
+                <span id="error-message" class="error-message"></span>
+                <button id="error-close" class="error-close" aria-label="Close error">&times;</button>
+            </div>
+
+            <!-- Amount Input Section -->
+            <div class="input-section">
+                <label for="amount" class="input-label">Amount</label>
+                <div class="amount-wrapper">
+                    <span class="currency-symbol" id="base-symbol">$</span>
+                    <input 
+                        type="number" 
+                        id="amount" 
+                        class="amount-input" 
+                        value="1000" 
+                        min="0" 
+                        step="any"
+                        placeholder="Enter amount"
+                        aria-label="Amount to convert"
+                    >
+                </div>
+            </div>
+
+            <!-- Currency Selection -->
+            <div class="currency-row">
+                <!-- From Currency -->
+                <div class="currency-group">
+                    <label for="from-currency" class="input-label">From</label>
+                    <div class="select-wrapper">
+                        <span class="flag-display" id="from-flag">🇺🇸</span>
+                        <select id="from-currency" class="currency-select" aria-label="Base currency">
+                            <option value="USD" data-flag="🇺🇸" data-symbol="$">USD - US Dollar</option>
+                            <option value="EUR" data-flag="🇪🇺" data-symbol="€">EUR - Euro</option>
+                            <option value="GBP" data-flag="🇬🇧" data-symbol="£">GBP - British Pound</option>
+                            <option value="JPY" data-flag="🇯🇵" data-symbol="¥">JPY - Japanese Yen</option>
+                            <option value="INR" data-flag="🇮🇳" data-symbol="₹">INR - Indian Rupee</option>
+                            <option value="AUD" data-flag="🇦🇺" data-symbol="A$">AUD - Australian Dollar</option>
+                            <option value="CAD" data-flag="🇨🇦" data-symbol="C$">CAD - Canadian Dollar</option>
+                            <option value="CHF" data-flag="🇨🇭" data-symbol="Fr">CHF - Swiss Franc</option>
+                            <option value="CNY" data-flag="🇨🇳" data-symbol="¥">CNY - Chinese Yuan</option>
+                            <option value="MXN" data-flag="🇲🇽" data-symbol="$">MXN - Mexican Peso</option>
+                            <option value="BRL" data-flag="🇧🇷" data-symbol="R$">BRL - Brazilian Real</option>
+                            <option value="KRW" data-flag="🇰🇷" data-symbol="₩">KRW - South Korean Won</option>
+                            <option value="SGD" data-flag="🇸🇬" data-symbol="S$">SGD - Singapore Dollar</option>
+                            <option value="HKD" data-flag="🇭🇰" data-symbol="HK$">HKD - Hong Kong Dollar</option>
+                            <option value="NOK" data-flag="🇳🇴" data-flag="kr">NOK - Norwegian Krone</option>
+                            <option value="NZD" data-flag="🇳🇿" data-symbol="NZ$">NZD - New Zealand Dollar</option>
+                            <option value="SEK" data-flag="🇸🇪" data-symbol="kr">SEK - Swedish Krona</option>
+                            <option value="RUB" data-flag="🇷🇺" data-symbol="₽">RUB - Russian Ruble</option>
+                            <option value="ZAR" data-flag="🇿🇦" data-symbol="R">ZAR - South African Rand</option>
+                            <option value="AED" data-flag="🇦🇪" data-symbol="د.إ">AED - UAE Dirham</option>
+                        </select>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                </div>
+
+                <!-- Swap Button -->
+                <button id="swap-btn" class="swap-button" aria-label="Swap currencies" title="Swap currencies">
+                    <svg class="swap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/>
+                    </svg>
+                </button>
+
+                <!-- To Currency -->
+                <div class="currency-group">
+                    <label for="to-currency" class="input-label">To</label>
+                    <div class="select-wrapper">
+                        <span class="flag-display" id="to-flag">🇮🇳</span>
+                        <select id="to-currency" class="currency-select" aria-label="Target currency">
+                            <option value="USD" data-flag="🇺🇸" data-symbol="$">USD - US Dollar</option>
+                            <option value="EUR" data-flag="🇪🇺" data-symbol="€">EUR - Euro</option>
+                            <option value="GBP" data-flag="🇬🇧" data-symbol="£">GBP - British Pound</option>
+                            <option value="JPY" data-flag="🇯🇵" data-symbol="¥">JPY - Japanese Yen</option>
+                            <option value="INR" data-flag="🇮🇳" data-symbol="₹" selected>INR - Indian Rupee</option>
+                            <option value="AUD" data-flag="🇦🇺" data-symbol="A$">AUD - Australian Dollar</option>
+                            <option value="CAD" data-flag="🇨🇦" data-symbol="C$">CAD - Canadian Dollar</option>
+                            <option value="CHF" data-flag="🇨🇭" data-symbol="Fr">CHF - Swiss Franc</option>
+                            <option value="CNY" data-flag="🇨🇳" data-symbol="¥">CNY - Chinese Yuan</option>
+                            <option value="MXN" data-flag="🇲🇽" data-symbol="$">MXN - Mexican Peso</option>
+                            <option value="BRL" data-flag="🇧🇷" data-symbol="R$">BRL - Brazilian Real</option>
+                            <option value="KRW" data-flag="🇰🇷" data-symbol="₩">KRW - South Korean Won</option>
+                            <option value="SGD" data-flag="🇸🇬" data-symbol="S$">SGD - Singapore Dollar</option>
+                            <option value="HKD" data-flag="🇭🇰" data-symbol="HK$">HKD - Hong Kong Dollar</option>
+                            <option value="NOK" data-flag="🇳🇴" data-symbol="kr">NOK - Norwegian Krone</option>
+                            <option value="NZD" data-flag="🇳🇿" data-symbol="NZ$">NZD - New Zealand Dollar</option>
+                            <option value="SEK" data-flag="🇸🇪" data-symbol="kr">SEK - Swedish Krona</option>
+                            <option value="RUB" data-flag="🇷🇺" data-symbol="₽">RUB - Russian Ruble</option>
+                            <option value="ZAR" data-flag="🇿🇦" data-symbol="R">ZAR - South African Rand</option>
+                            <option value="AED" data-flag="🇦🇪" data-symbol="د.إ">AED - UAE Dirham</option>
+                        </select>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Section -->
+            <div class="result-section">
+                <div class="result-label">Converted Amount</div>
+                <div class="result-container">
+                    <div id="loading-spinner" class="spinner hidden"></div>
+                    <div id="result-display" class="result-display">
+                        <span id="result-value" class="result-value">0.00</span>
+                        <span id="result-currency" class="result-currency">INR</span>
+                    </div>
+                </div>
+                <div class="rate-info">
+                    <div id="rate-tooltip" class="rate-tooltip" title="Click to copy rate">
+                        <span class="rate-label">Exchange Rate:</span>
+                        <span id="rate-value" class="rate-value">1 USD = 0.00 INR</span>
+                    </div>
+                    <div id="last-updated" class="last-updated"></div>
+                </div>
+            </div>
+
+            <!-- Convert Button -->
+            <button id="convert-btn" class="convert-button">
+                <span class="btn-text">Convert Now</span>
+                <span class="btn-icon">→</span>
+            </button>
+        </main>
+
+        <footer class="app-footer">
+            <p>Powered by <a href="https://open.er-api.com" target="_blank" rel="noopener noreferrer">Exchange Rate API</a></p>
+            <p class="disclaimer">Rates are for informational purposes only</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

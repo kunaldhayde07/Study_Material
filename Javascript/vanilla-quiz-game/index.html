@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>quizly</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --glass: rgba(255,255,255,0.08);
+        }
+        
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+        }
+        
+        .question-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .option {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        
+        .option-selected {
+            border-color: rgb(147 51 234);
+            background-color: rgb(147 51 234 / 0.1);
+        }
+        
+        .timer-ring {
+            transition: stroke-dashoffset 0.3s linear;
+        }
+        
+        .screen {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .correct {
+            animation: correctPop 0.6s ease;
+        }
+        
+        @keyframes correctPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .progress-bar {
+            transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white">
+    <div class="max-w-2xl mx-auto min-h-screen flex flex-col">
+        <!-- HEADER -->
+        <div class="flex items-center justify-between border-b border-white/10 px-6 py-5">
+            <div class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-violet-600 rounded-2xl flex items-center justify-center text-2xl leading-none pt-0.5">❔</div>
+                <div>
+                    <span class="font-semibold tracking-tighter text-3xl" style="font-family: 'Space Grotesk', sans-serif;">quizly</span>
+                </div>
+            </div>
+            
+            <div onclick="showHighScores()" 
+                 class="flex items-center gap-x-2 bg-white/5 hover:bg-white/10 transition-colors px-4 h-9 rounded-3xl text-sm cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2 2 2 0 01-2-2V5a2 2 0 012-2 2 2 0 01-2-2v.341C7.67 6.165 6 8.388 6 11v5.159c0 .538-.214 1.055-.595 1.436L4 17" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v3m0 0l-3-3m3 3l3-3" />
+                </svg>
+                <span class="font-medium text-zinc-400 text-xs tracking-widest">HIGH SCORE</span>
+                <span id="header-high-score" class="font-mono text-emerald-400 text-lg font-semibold">2480</span>
+            </div>
+        </div>
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="screen flex-1 flex flex-col items-center justify-center px-6 py-12">
+            <div class="max-w-md w-full">
+                <!-- hero -->
+                <div class="text-center mb-12">
+                    <div class="inline-flex items-center gap-x-2 bg-white/5 text-white text-sm font-medium px-6 py-2.5 rounded-3xl mb-6">
+                        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                        NEW SEASON
+                    </div>
+                    <h1 class="text-7xl font-semibold tracking-tighter mb-3" style="font-family: 'Space Grotesk', sans-serif;">Ready to test<br>your brain?</h1>
+                    <p class="text-zinc-400 max-w-xs mx-auto">10 questions. 20 seconds each.<br>Beat your high score.</p>
+                </div>
+
+                <div class="glass border border-white/10 rounded-3xl p-2 mb-8">
+                    <div onclick="selectDifficulty(0)" id="diff-easy"
+                         class="difficulty-btn flex justify-between items-center px-6 py-6 hover:bg-white/5 rounded-3xl cursor-pointer transition-all group">
+                        <div class="flex items-center gap-x-4">
+                            <div class="w-8 h-8 bg-emerald-400/10 text-emerald-400 flex items-center justify-center rounded-2xl text-xl">🌱</div>
+                            <div>
+                                <div class="font-semibold text-lg">Easy</div>
+                                <div class="text-xs text-zinc-400">Basic knowledge</div>
+                            </div>
+                        </div>
+                        <div class="text-emerald-400 text-xs font-mono">×1.0</div>
+                    </div>
+                    
+                    <div class="h-px bg-white/10 mx-6"></div>
+                    
+                    <div onclick="selectDifficulty(1)" id="diff-medium"
+                         class="difficulty-btn flex justify-between items-center px-6 py-6 hover:bg-white/5 rounded-3xl cursor-pointer transition-all group">
+                        <div class="flex items-center gap-x-4">
+                            <div class="w-8 h-8 bg-amber-400/10 text-amber-400 flex items-center justify-center rounded-2xl text-xl">⚡</div>
+                            <div>
+                                <div class="font-semibold text-lg">Medium</div>
+                                <div class="text-xs text-zinc-400">Intermediate</div>
+                            </div>
+                        </div>
+                        <div class="text-amber-400 text-xs font-mono">×1.5</div>
+                    </div>
+                    
+                    <div class="h-px bg-white/10 mx-6"></div>
+                    
+                    <div onclick="selectDifficulty(2)" id="diff-hard"
+                         class="difficulty-btn flex justify-between items-center px-6 py-6 hover:bg-white/5 rounded-3xl cursor-pointer transition-all group">
+                        <div class="flex items-center gap-x-4">
+                            <div class="w-8 h-8 bg-rose-400/10 text-rose-400 flex items-center justify-center rounded-2xl text-xl">🔥</div>
+                            <div>
+                                <div class="font-semibold text-lg">Hard</div>
+                                <div class="text-xs text-zinc-400">Expert level</div>
+                            </div>
+                        </div>
+                        <div class="text-rose-400 text-xs font-mono">×2.0</div>
+                    </div>
+                </div>
+
+                <button onclick="startQuiz()" 
+                        class="w-full h-14 bg-white text-zinc-900 rounded-3xl font-semibold flex items-center justify-center gap-x-3 hover:scale-105 active:scale-95 transition-all text-lg shadow-2xl shadow-violet-500/30">
+                    <span>START QUIZ</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7-7 7" />
+                    </svg>
+                </button>
+
+                <div class="flex justify-center gap-x-8 text-xs mt-10 text-zinc-500">
+                    <div class="flex items-center gap-x-1.5">
+                        <div class="w-px h-3 bg-emerald-400"></div>
+                        <span>8 questions</span>
+                    </div>
+                    <div>20 seconds</div>
+                    <div class="flex items-center gap-x-1.5">
+                        <span>High score:</span>
+                        <span id="start-high-score" class="font-mono text-emerald-300">2840</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen" class="screen hidden flex-1 flex flex-col">
+            <!-- top bar -->
+            <div class="px-6 pt-6 flex items-center justify-between">
+                <div onclick="quitQuiz()" 
+                     class="flex items-center justify-center w-8 h-8 hover:bg-white/10 rounded-2xl cursor-pointer transition-colors">
+                    ✕
+                </div>
+                
+                <div class="flex items-center gap-x-2 font-mono text-sm">
+                    <span id="question-counter" class="text-zinc-400">1</span>
+                    <span class="text-zinc-500">/</span>
+                    <span id="total-questions" class="text-zinc-400">8</span>
+                </div>
+                
+                <div class="flex-1 mx-8 h-2 bg-white/10 rounded-3xl overflow-hidden">
+                    <div id="progress-fill" 
+                         class="progress-bar h-2 w-1/8 bg-gradient-to-r from-violet-400 to-fuchsia-400 rounded-3xl"></div>
+                </div>
+                
+                <!-- timer -->
+                <div class="flex items-center gap-x-3 font-mono">
+                    <div id="timer-text" 
+                         class="tabular-nums w-10 text-right text-xl font-semibold text-white">20</div>
+                    <div class="relative w-6 h-6">
+                        <svg id="timer-svg" class="w-6 h-6 -rotate-12" viewBox="0 0 42 42">
+                            <circle cx="21" cy="21" r="15" fill="none" stroke="#27272a" stroke-width="6"></circle>
+                            <circle id="timer-progress" 
+                                    cx="21" cy="21" r="15" 
+                                    fill="none" 
+                                    stroke="#a78bfa" 
+                                    stroke-width="6"
+                                    stroke-dasharray="94.2"
+                                    stroke-dashoffset="0"
+                                    stroke-linecap="round"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- question area -->
+            <div class="flex-1 flex flex-col px-6 pt-8">
+                <div id="question-text" 
+                     class="question-card glass border border-white/10 rounded-3xl px-8 py-10 text-2xl leading-tight font-medium min-h-[180px] flex items-center">
+                </div>
+                
+                <!-- options -->
+                <div id="options-container" class="mt-8 grid grid-cols-1 gap-3">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+            
+            <!-- footer -->
+            <div class="p-6 border-t border-white/10 mt-auto">
+                <button onclick="submitAnswer()" 
+                        id="submit-btn"
+                        class="w-full h-14 bg-white/5 hover:bg-white/10 border border-white/30 text-white disabled:text-zinc-400 disabled:border-white/10 font-medium rounded-3xl transition-all flex items-center justify-center gap-x-2">
+                    SUBMIT ANSWER
+                </button>
+                
+                <div id="feedback" class="hidden mt-6 text-center text-sm"></div>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="result-screen" class="screen hidden flex-1 flex flex-col items-center justify-center px-6">
+            <div class="w-full max-w-md">
+                <!-- score circle -->
+                <div class="relative mx-auto w-52 h-52 flex items-center justify-center mb-8">
+                    <svg class="w-52 h-52" viewBox="0 0 200 200">
+                        <circle class="text-zinc-800" stroke-width="24" fill="transparent" r="82" cx="100" cy="100"/>
+                        <circle id="score-circle" 
+                                class="text-violet-400 transition-all" 
+                                stroke-width="24" 
+                                stroke-dasharray="515"
+                                stroke-dashoffset="100"
+                                stroke-linecap="round"
+                                fill="transparent" 
+                                r="82" 
+                                cx="100" 
+                                cy="100"
+                                transform="rotate(-90 100 100)"/>
+                    </svg>
+                    
+                    <div class="absolute text-center">
+                        <div id="final-score" class="text-7xl font-semibold tabular-nums tracking-tighter">1840</div>
+                        <div class="text-xs uppercase tracking-[1px] text-zinc-400 font-medium">SCORE</div>
+                        <div id="final-percentage" class="mt-1 text-emerald-400 text-4xl font-mono font-semibold">92%</div>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-8">
+                    <div id="result-title" class="text-4xl font-semibold mb-1">Outstanding</div>
+                    <div id="result-subtitle" class="text-zinc-400">You crushed it</div>
+                </div>
+                
+                <!-- stats -->
+                <div class="glass border border-white/10 rounded-3xl p-6 mb-8">
+                    <div class="grid grid-cols-3 gap-px bg-white/5 rounded-2xl overflow-hidden">
+                        <div class="bg-zinc-900 p-4 text-center">
+                            <div class="text-[10px] font-mono tracking-widest text-zinc-400">CORRECT</div>
+                            <div id="correct-count" class="text-4xl font-semibold text-emerald-300">7</div>
+                            <div class="text-xs text-zinc-500">out of 8</div>
+                        </div>
+                        <div class="bg-zinc-900 p-4 text-center">
+                            <div class="text-[10px] font-mono tracking-widest text-zinc-400">TIME LEFT</div>
+                            <div id="avg-time" class="text-4xl font-semibold text-amber-300">12s</div>
+                            <div class="text-xs text-zinc-500">average</div>
+                        </div>
+                        <div class="bg-zinc-900 p-4 text-center">
+                            <div class="text-[10px] font-mono tracking-widest text-zinc-400">ACCURACY</div>
+                            <div id="accuracy" class="text-4xl font-semibold text-sky-300">88%</div>
+                            <div class="text-xs text-zinc-500">total</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button onclick="restartQuiz()" 
+                            class="flex-1 h-12 bg-white/10 hover:bg-white/15 transition-colors rounded-3xl text-sm font-semibold">
+                        TRY AGAIN
+                    </button>
+                    <button onclick="goToStart()" 
+                            class="flex-1 h-12 bg-white text-zinc-950 hover:bg-amber-200 transition-colors rounded-3xl text-sm font-semibold">
+                        NEW DIFFICULTY
+                    </button>
+                </div>
+                
+                <div onclick="showHighScoresModal()" class="text-center text-xs mt-8 text-zinc-400 flex items-center justify-center gap-x-2 cursor-pointer hover:text-zinc-300">
+                    <span>VIEW ALL HIGH SCORES</span>
+                    <span class="text-lg leading-none">→</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HIGH SCORE MODAL -->
+    <div onclick="if(event.target.id === 'modal-backdrop') hideHighScoresModal()" id="modal-backdrop"
+         class="hidden fixed inset-0 bg-black/70 flex items-end lg:items-center justify-center z-50">
+        <div onclick="event.stopImmediatePropagation()" 
+             class="glass border border-white/10 w-full max-w-md mx-4 mb-8 lg:mb-0 rounded-3xl overflow-hidden">
+            <div class="px-6 py-6 border-b border-white/10 flex items-center justify-between">
+                <div class="font-semibold">High Scores</div>
+                <div onclick="hideHighScoresModal()" class="w-8 h-8 flex items-center justify-center text-2xl leading-none text-zinc-400 cursor-pointer">×</div>
+            </div>
+            
+            <div id="highscores-list" class="p-2">
+                <!-- populated by js -->
+            </div>
+            
+            <div class="p-4">
+                <button onclick="hideHighScoresModal()" 
+                        class="w-full py-6 text-xs tracking-widest font-medium text-zinc-400 hover:text-white">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tailwind script run
+        function initializeTailwind() {
+            // Already initialized via CDN
+        }
+        
+        // QUESTIONS DATABASE
+        const allQuestions = {
+            easy: [
+                {
+                    q: "What is the capital of France?",
+                    a: ["Paris", "London", "Madrid", "Berlin"],
+                    c: 0,
+                    expl: "Paris is the capital and most populous city of France."
+                },
+                {
+                    q: "What is the largest planet in our solar system?",
+                    a: ["Earth", "Mars", "Jupiter", "Saturn"],
+                    c: 2,
+                    expl: "Jupiter is the largest planet."
+                },
+                {
+                    q: "What is the chemical symbol for water?",
+                    a: ["O2", "H2O", "CO2", "NaCl"],
+                    c: 1,
+                    expl: "H₂O is the chemical formula for water."
+                },
+                {
+                    q: "How many continents are there?",
+                    a: ["5", "6", "7", "8"],
+                    c: 2,
+                    expl: "There are 7 continents."
+                },
+                {
+                    q: "What year did the first iPhone launch?",
+                    a: ["2005", "2006", "2007", "2008"],
+                    c: 2,
+                    expl: "The original iPhone was announced in 2007."
+                },
+                {
+                    q: "Who wrote 'Harry Potter'?",
+                    a: ["J.K. Rowling", "Stephen King", "George R.R. Martin", "Suzanne Collins"],
+                    c: 0,
+                    expl: "J.K. Rowling created the Harry Potter series."
+                },
+                {
+                    q: "What is the square root of 64?",
+                    a: ["6", "7", "8", "9"],
+                    c: 2,
+                    expl: "8 × 8 = 64"
+                },
+                {
+                    q: "What is the currency of Japan?",
+                    a: ["Yuan", "Won", "Yen", "Ringgit"],
+                    c: 2,
+                    expl: "The yen is the official currency of Japan."
+                }
+            ],
+            medium: [
+                {
+                    q: "Which programming language is primarily used for web development alongside HTML and CSS?",
+                    a: ["Python", "JavaScript", "Java", "C++"],
+                    c: 1,
+                    expl: "JavaScript powers interactivity on the web."
+                },
+                {
+                    q: "What is the powerhouse of the cell?",
+                    a: ["Nucleus", "Ribosome", "Mitochondria", "Golgi apparatus"],
+                    c: 2,
+                    expl: "Mitochondria produce most of the cell's energy."
+                },
+                {
+                    q: "In what year did World War II end?",
+                    a: ["1943", "1944", "1945", "1946"],
+                    c: 2,
+                    expl: "WWII officially ended in 1945."
+                },
+                {
+                    q: "Who painted the Sistine Chapel ceiling?",
+                    a: ["Leonardo da Vinci", "Vincent van Gogh", "Pablo Picasso", "Michelangelo"],
+                    c: 3,
+                    expl: "Michelangelo painted the ceiling between 1508 and 1512."
+                },
+                {
+                    q: "What is the smallest unit of life?",
+                    a: ["Atom", "Molecule", "Cell", "Organ"],
+                    c: 2,
+                    expl: "The cell is the basic unit of life."
+                },
+                {
+                    q: "What does HTTP stand for?",
+                    a: ["HyperText Transfer Protocol", "HyperText Transmission Process", "High Transfer Text Protocol", "Hyperlink Text Transfer Process"],
+                    c: 0,
+                    expl: "HTTP is the foundation of data communication on the World Wide Web."
+                },
+                {
+                    q: "How many bones are in the adult human body?",
+                    a: ["198", "204", "206", "212"],
+                    c: 2,
+                    expl: "There are 206 bones in an adult human."
+                },
+                {
+                    q: "What is the capital of Australia?",
+                    a: ["Sydney", "Melbourne", "Canberra", "Perth"],
+                    c: 2,
+                    expl: "Canberra is the capital city of Australia."
+                }
+            ],
+            hard: [
+                {
+                    q: "What is the value of gravitational acceleration on Earth?",
+                    a: ["8.9 m/s²", "9.8 m/s²", "10.2 m/s²", "7.4 m/s²"],
+                    c: 1,
+                    expl: "The standard is approximately 9.8 m/s²."
+                },
+                {
+                    q: "Who is credited with discovering the structure of DNA?",
+                    a: ["Marie Curie", "Rosalind Franklin", "Watson & Crick", "Gregor Mendel"],
+                    c: 2,
+                    expl: "James Watson and Francis Crick discovered the double helix model."
+                },
+                {
+                    q: "What is the 19th element in the periodic table?",
+                    a: ["Neon", "Sodium", "Magnesium", "Potassium"],
+                    c: 3,
+                    expl: "Potassium (K) is element number 19."
+                },
+                {
+                    q: "In what year was the first computer bug discovered?",
+                    a: ["1938", "1947", "1952", "1961"],
+                    c: 1,
+                    expl: "Grace Hopper found a moth stuck in the Mark II computer in 1947."
+                },
+                {
+                    q: "What is the longest river in the world?",
+                    a: ["Amazon", "Nile", "Yangtze", "Mississippi"],
+                    c: 1,
+                    expl: "The Nile is traditionally considered the longest river."
+                },
+                {
+                    q: "What does the acronym 'NASA' stand for?",
+                    a: ["National Aeronautics and Space Agency", "National Aeronautics and Space Administration", "North American Space Association", "National Air and Space Association"],
+                    c: 1,
+                    expl: "NASA stands for National Aeronautics and Space Administration."
+                },
+                {
+                    q: "How many keys are on a standard piano?",
+                    a: ["76", "82", "88", "92"],
+                    c: 2,
+                    expl: "A full-sized piano has 88 keys."
+                }
+            ]
+        }
+        
+        // STATE
+        let currentDifficulty = "easy"
+        let currentQuestions = []
+        let currentQuestionIndex = 0
+        let score = 0
+        let correctAnswersCount = 0
+        let selectedOption = null
+        let timerInterval = null
+        let timeLeft = 20
+        let hasAnswered = false
+        let totalTimeUsed = 0
+        let highScores = {
+            easy: 1240,
+            medium: 1780,
+            hard: 940
+        }
+        
+        // Load high scores from localStorage
+        function loadHighScores() {
+            const saved = localStorage.getItem("quizly_highscores")
+            if (saved) {
+                highScores = JSON.parse(saved)
+            }
+            updateHighScoreDisplay()
+        }
+        
+        function saveHighScore(difficulty, newScore) {
+            if (newScore > (highScores[difficulty] || 0)) {
+                highScores[difficulty] = newScore
+                localStorage.setItem("quizly_highscores", JSON.stringify(highScores))
+                updateHighScoreDisplay()
+                return true
+            }
+            return false
+        }
+        
+        function updateHighScoreDisplay() {
+            const el = document.getElementById("header-high-score")
+            const startEl = document.getElementById("start-high-score")
+            
+            if (el) el.textContent = highScores[currentDifficulty] || 1240
+            if (startEl) startEl.textContent = highScores[currentDifficulty] || 1240
+        }
+        
+        function selectDifficulty(level) {
+            currentDifficulty = ["easy", "medium", "hard"][level]
+            
+            // reset styles
+            document.querySelectorAll('.difficulty-btn').forEach((el, i) => {
+                if (i === level) {
+                    el.style.backgroundColor = 'rgb(250 250 250 / 0.1)'
+                    el.style.border = '1px solid rgb(167 139 250)'
+                } else {
+                    el.style.backgroundColor = ''
+                    el.style.border = ''
+                }
+            })
+        }
+        
+        function startQuiz() {
+            if (!currentDifficulty) {
+                currentDifficulty = "easy"
+            }
+            
+            currentQuestions = [...allQuestions[currentDifficulty]]
+            // shuffle
+            currentQuestions.sort(() => Math.random() - 0.5)
+            // take 8
+            currentQuestions = currentQuestions.slice(0, 8)
+            
+            currentQuestionIndex = 0
+            score = 0
+            correctAnswersCount = 0
+            totalTimeUsed = 0
+            
+            document.getElementById("start-screen").classList.add("hidden")
+            document.getElementById("quiz-screen").classList.remove("hidden")
+            document.getElementById("result-screen").classList.add("hidden")
+            
+            loadQuestion()
+            updateHighScoreDisplay()
+        }
+        
+        function loadQuestion() {
+            hasAnswered = false
+            selectedOption = null
+            timeLeft = 20
+            
+            const q = currentQuestions[currentQuestionIndex]
+            
+            // update counter
+            document.getElementById("question-counter").textContent = currentQuestionIndex + 1
+            document.getElementById("total-questions").textContent = currentQuestions.length
+            
+            // progress
+            const progress = ((currentQuestionIndex) / currentQuestions.length) * 100
+            document.getElementById("progress-fill").style.width = `${progress}%`
+            
+            // question text
+            document.getElementById("question-text").innerHTML = `
+                <span class="block text-violet-300 text-sm font-mono mb-4 tracking-widest">QUESTION ${currentQuestionIndex + 1}</span>
+                <span>${q.q}</span>
+            `
+            
+            // render options
+            const container = document.getElementById("options-container")
+            container.innerHTML = ""
+            
+            q.a.forEach((optionText, index) => {
+                const optionHTML = `
+                <div onclick="pickOption(${index})" id="opt-${index}"
+                     class="option glass border border-white/10 hover:border-violet-300 rounded-3xl px-7 py-6 text-lg cursor-pointer flex items-center gap-4">
+                    <div class="w-6 h-6 flex-shrink-0 border border-white/30 rounded-2xl flex items-center justify-center text-xs font-mono">${String.fromCharCode(65 + index)}</div>
+                    <div class="flex-1">${optionText}</div>
+                </div>`
+                container.innerHTML += optionHTML
+            })
+            
+            // reset submit button
+            const submitBtn = document.getElementById("submit-btn")
+            submitBtn.textContent = "SUBMIT ANSWER"
+            submitBtn.disabled = true
+            submitBtn.onclick = submitAnswer
+            submitBtn.classList.remove("!bg-emerald-400", "!text-white")
+            
+            document.getElementById("feedback").classList.add("hidden")
+            
+            startTimer()
+        }
+        
+        function pickOption(index) {
+            if (hasAnswered) return
+            
+            selectedOption = index
+            
+            // deselect all
+            for (let i = 0; i < 4; i++) {
+                const opt = document.getElementById(`opt-${i}`)
+                if (opt) {
+                    opt.classList.remove("option-selected", "border-violet-400")
+                }
+            }
+            
+            // select this one
+            const selectedEl = document.getElementById(`opt-${index}`)
+            if (selectedEl) selectedEl.classList.add("option-selected", "border-violet-400")
+            
+            // enable submit
+            document.getElementById("submit-btn").disabled = false
+        }
+        
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval)
+            
+            const timerText = document.getElementById("timer-text")
+            const progressCircle = document.getElementById("timer-progress")
+            const circumference = 94.2
+            
+            timerText.textContent = timeLeft
+            
+            timerInterval = setInterval(() => {
+                timeLeft--
+                timerText.textContent = timeLeft
+                
+                // progress
+                const offset = circumference - (circumference * (timeLeft / 20))
+                progressCircle.setAttribute("stroke-dashoffset", offset)
+                
+                // color change
+                if (timeLeft <= 6) {
+                    timerText.classList.add("text-rose-400")
+                    progressCircle.setAttribute("stroke", "#f43f5e")
+                } else if (timeLeft <= 12) {
+                    timerText.classList.add("text-amber-400")
+                    progressCircle.setAttribute("stroke", "#fbbf24")
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval)
+                    timeExpired()
+                }
+            }, 1000)
+        }
+        
+        function timeExpired() {
+            hasAnswered = true
+            const correctIndex = currentQuestions[currentQuestionIndex].c
+            showAnswerFeedback(false, correctIndex)
+        }
+        
+        function submitAnswer() {
+            if (hasAnswered || selectedOption === null) return
+            
+            clearInterval(timerInterval)
+            hasAnswered = true
+            
+            const correctIndex = currentQuestions[currentQuestionIndex].c
+            const isCorrect = selectedOption === correctIndex
+            
+            if (isCorrect) {
+                correctAnswersCount++
+                const timeBonus = Math.floor(timeLeft * 12)
+                score += 100 + timeBonus
+            }
+            
+            totalTimeUsed += (20 - timeLeft)
+            
+            showAnswerFeedback(isCorrect, correctIndex)
+        }
+        
+        function showAnswerFeedback(isCorrect, correctIndex) {
+            const feedbackEl = document.getElementById("feedback")
+            const submitBtn = document.getElementById("submit-btn")
+            
+            // color options
+            for (let i = 0; i < 4; i++) {
+                const el = document.getElementById(`opt-${i}`)
+                if (!el) continue
+                
+                el.style.pointerEvents = "none"
+                
+                if (i === correctIndex) {
+                    el.classList.add("!border-emerald-400", "bg-emerald-400/10")
+                }
+                
+                if (!isCorrect && i === selectedOption) {
+                    el.classList.add("!border-rose-400")
+                }
+            }
+            
+            if (isCorrect) {
+                feedbackEl.innerHTML = `
+                    <span class="inline-flex items-center gap-x-2 text-emerald-400">
+                        <span class="text-3xl">🎉</span> 
+                        <span class="font-medium">CORRECT</span>
+                    </span>
+                `
+                feedbackEl.classList.remove("hidden")
+                submitBtn.innerHTML = `NEXT QUESTION <span class="text-xs ml-3">→</span>`
+                submitBtn.onclick = nextQuestion
+                submitBtn.disabled = false
+                submitBtn.classList.add("!bg-emerald-400", "!text-white", "border-none")
+            } else {
+                feedbackEl.innerHTML = `
+                    <div class="flex flex-col items-center">
+                        <span class="text-rose-400 font-medium">INCORRECT</span>
+                        <span class="text-zinc-400 text-xs mt-1">${currentQuestions[currentQuestionIndex].expl}</span>
+                    </div>
+                `
+                feedbackEl.classList.remove("hidden")
+                submitBtn.innerHTML = `NEXT QUESTION <span class="text-xs ml-3">→</span>`
+                submitBtn.onclick = nextQuestion
+                submitBtn.disabled = false
+            }
+        }
+        
+        function nextQuestion() {
+            currentQuestionIndex++
+            
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz()
+            } else {
+                loadQuestion()
+            }
+        }
+        
+        function endQuiz() {
+            clearInterval(timerInterval)
+            
+            document.getElementById("quiz-screen").classList.add("hidden")
+            document.getElementById("result-screen").classList.remove("hidden")
+            
+            const totalQuestions = currentQuestions.length
+            const accuracy = totalQuestions > 0 ? Math.round((correctAnswersCount / totalQuestions) * 100) : 0
+            
+            document.getElementById("final-score").textContent = score
+            document.getElementById("final-percentage").textContent = `${accuracy}%`
+            
+            document.getElementById("correct-count").textContent = `${correctAnswersCount}`
+            
+            const avgTime = totalQuestions > 0 ? Math.round(totalTimeUsed / totalQuestions) : 12
+            document.getElementById("avg-time").textContent = `${avgTime}s`
+            
+            document.getElementById("accuracy").textContent = `${accuracy}%`
+            
+            // title
+            let title = "Not bad"
+            let subtitle = "Keep practicing"
+            
+            if (accuracy > 85) {
+                title = "Legendary"
+                subtitle = "You're a genius"
+            } else if (accuracy > 70) {
+                title = "Impressive"
+                subtitle = "Well done"
+            } else if (accuracy > 55) {
+                title = "Solid effort"
+                subtitle = "You got this"
+            }
+            
+            document.getElementById("result-title").textContent = title
+            document.getElementById("result-subtitle").textContent = subtitle
+            
+            // animate the circle
+            setTimeout(() => {
+                const offset = 515 - (515 * (accuracy / 100))
+                document.getElementById("score-circle").setAttribute("stroke-dashoffset", offset)
+            }, 300)
+            
+            // save high score
+            const isNewHigh = saveHighScore(currentDifficulty, score)
+            
+            if (isNewHigh) {
+                const congrats = document.createElement("div")
+                congrats.textContent = "🏆 NEW HIGH SCORE!"
+                congrats.className = "absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-300 text-zinc-950 text-[10px] font-bold px-5 py-1 rounded-3xl shadow-inner"
+                document.querySelector("#result-screen > div").appendChild(congrats)
+                
+                setTimeout(() => {
+                    congrats.remove()
+                }, 2800)
+            }
+        }
+        
+        function restartQuiz() {
+            document.getElementById("result-screen").classList.add("hidden")
+            startQuiz()
+        }
+        
+        function goToStart() {
+            document.getElementById("result-screen").classList.add("hidden")
+            document.getElementById("start-screen").classList.remove("hidden")
+            document.getElementById("quiz-screen").classList.add("hidden")
+        }
+        
+        function quitQuiz() {
+            if (confirm("Are you sure you want to quit the quiz?")) {
+                clearInterval(timerInterval)
+                goToStart()
+            }
+        }
+        
+        function showHighScores() {
+            showHighScoresModal()
+        }
+        
+        function showHighScoresModal() {
+            const modal = document.getElementById("modal-backdrop")
+            const container = document.getElementById("highscores-list")
+            
+            container.innerHTML = `
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center px-4 py-5 bg-white/5 rounded-3xl">
+                        <div class="flex items-center gap-x-4">
+                            <span class="text-4xl">🌱</span>
+                            <div>
+                                <div class="font-semibold">Easy</div>
+                                <div class="text-xs text-zinc-400">Beginner mode</div>
+                            </div>
+                        </div>
+                        <div class="font-mono text-3xl text-emerald-400">${highScores.easy || 1240}</div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center px-4 py-5 bg-white/5 rounded-3xl">
+                        <div class="flex items-center gap-x-4">
+                            <span class="text-4xl">⚡</span>
+                            <div>
+                                <div class="font-semibold">Medium</div>
+                                <div class="text-xs text-zinc-400">Intermediate</div>
+                            </div>
+                        </div>
+                        <div class="font-mono text-3xl text-amber-400">${highScores.medium || 1780}</div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center px-4 py-5 bg-white/5 rounded-3xl">
+                        <div class="flex items-center gap-x-4">
+                            <span class="text-4xl">🔥</span>
+                            <div>
+                                <div class="font-semibold">Hard</div>
+                                <div class="text-xs text-zinc-400">Expert only</div>
+                            </div>
+                        </div>
+                        <div class="font-mono text-3xl text-rose-400">${highScores.hard || 940}</div>
+                    </div>
+                </div>
+            `
+            
+            modal.classList.remove("hidden")
+            modal.classList.add("flex")
+        }
+        
+        function hideHighScoresModal() {
+            const modal = document.getElementById("modal-backdrop")
+            modal.classList.add("hidden")
+            modal.classList.remove("flex")
+        }
+        
+        // KEYBOARD SUPPORT
+        function setupKeyboard() {
+            document.addEventListener('keydown', function(e) {
+                const quizScreen = document.getElementById("quiz-screen")
+                
+                if (quizScreen.classList.contains("hidden")) return
+                
+                if (e.key === "Escape") {
+                    quitQuiz()
+                    return
+                }
+                
+                if (hasAnswered) return
+                
+                if (["1","2","3","4"].indexOf(e.key) > -1) {
+                    const index = parseInt(e.key) - 1
+                    pickOption(index)
+                }
+                
+                if (e.key === "Enter" && selectedOption !== null) {
+                    submitAnswer()
+                }
+            })
+        }
+        
+        // INIT
+        function initialize() {
+            // Run tailwind
+            initializeTailwind()
+            
+            loadHighScores()
+            
+            // Select easy by default
+            selectDifficulty(0)
+            
+            // Make sure only start screen visible
+            document.getElementById("start-screen").classList.remove("hidden")
+            document.getElementById("quiz-screen").classList.add("hidden")
+            document.getElementById("result-screen").classList.add("hidden")
+            
+            setupKeyboard()
+            
+            // Demo high score
+            console.log('%cQuizly ready 👾', 'font-family:monospace;color:#a78bfa;font-size:10px')
+        }
+        
+        window.onload = initialize
+    </script>
+</body>
+</html>

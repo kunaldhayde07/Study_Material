@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker | Personal Finance Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                <h1>Expense Tracker</h1>
+            </div>
+            <p class="tagline">Manage your finances with ease</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Balance Summary Cards -->
+            <section class="balance-section">
+                <div class="balance-card total-balance">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="4" width="20" height="16" rx="2"/>
+                            <path d="M12 10v4M10 12h4"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Total Balance</span>
+                        <span class="card-value" id="totalBalance">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="balance-card income-card">
+                    <div class="card-icon income">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 19V5M5 12l7-7 7 7"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Total Income</span>
+                        <span class="card-value income" id="totalIncome">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="balance-card expense-card">
+                    <div class="card-icon expense">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12l7 7 7-7"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Total Expenses</span>
+                        <span class="card-value expense" id="totalExpenses">$0.00</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="content-grid">
+                <!-- Add Transaction Form -->
+                <section class="form-section glass-card">
+                    <h2 class="section-title">Add Transaction</h2>
+                    <form id="transactionForm" class="transaction-form">
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <input 
+                                type="text" 
+                                id="description" 
+                                placeholder="e.g., Grocery shopping"
+                                autocomplete="off"
+                            >
+                            <span class="error-message" id="descriptionError"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Amount ($)</label>
+                            <input 
+                                type="number" 
+                                id="amount" 
+                                placeholder="0.00"
+                                step="0.01"
+                                min="0.01"
+                            >
+                            <span class="error-message" id="amountError"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Transaction Type</label>
+                            <div class="type-toggle">
+                                <input type="radio" id="typeIncome" name="type" value="income">
+                                <label for="typeIncome" class="toggle-btn income-toggle">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 19V5M5 12l7-7 7 7"/>
+                                    </svg>
+                                    Income
+                                </label>
+                                <input type="radio" id="typeExpense" name="type" value="expense" checked>
+                                <label for="typeExpense" class="toggle-btn expense-toggle">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 5v14M5 12l7 7 7-7"/>
+                                    </svg>
+                                    Expense
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            Add Transaction
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Transaction History -->
+                <section class="history-section glass-card">
+                    <div class="history-header">
+                        <h2 class="section-title">Transaction History</h2>
+                        <button class="export-btn" id="exportBtn" title="Export as JSON">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export
+                        </button>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="controls">
+                        <div class="search-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
+                            <input 
+                                type="text" 
+                                id="searchInput" 
+                                placeholder="Search transactions..."
+                            >
+                        </div>
+                        <div class="filter-tabs">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="income">Income</button>
+                            <button class="filter-btn" data-filter="expense">Expense</button>
+                        </div>
+                    </div>
+
+                    <!-- Transaction List -->
+                    <div class="transaction-list" id="transactionList">
+                        <!-- Transactions will be rendered here -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState">
+                        <svg class="empty-illustration" viewBox="0 0 200 200" fill="none">
+                            <circle cx="100" cy="100" r="80" fill="#f0f4ff"/>
+                            <path d="M60 90h80M60 110h80M60 130h50" stroke="#a0aec0" stroke-width="4" stroke-linecap="round"/>
+                            <circle cx="140" cy="70" r="25" fill="#e2e8f0"/>
+                            <path d="M140 60v20M130 70h20" stroke="#718096" stroke-width="3" stroke-linecap="round"/>
+                        </svg>
+                        <h3>No transactions yet</h3>
+                        <p>Start tracking your finances by adding your first transaction above.</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span class="toast-message" id="toastMessage">Transaction added successfully!</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

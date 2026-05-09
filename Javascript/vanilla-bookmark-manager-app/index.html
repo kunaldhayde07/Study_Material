@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookmark Saver Application</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    :root {
+      --bg-start: #eff6ff;
+      --bg-end: #e2e8f0;
+      --accent: #0ea5e9;
+      --accent-dark: #0284c7;
+      --text-primary: #0f172a;
+      --text-muted: #475569;
+      --error: #ef4444;
+      --card-border: rgba(255, 255, 255, 0.45);
+      --glass: rgba(255, 255, 255, 0.58);
+      --shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-primary);
+      background: linear-gradient(155deg, var(--bg-start), var(--bg-end));
+    }
+
+    .app-shell {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .page-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(14, 165, 233, 0.2), transparent 36%),
+        radial-gradient(circle at 85% 10%, rgba(56, 189, 248, 0.18), transparent 34%);
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass-panel {
+      background: var(--glass);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .headline {
+      font-size: clamp(1.6rem, 2.7vw, 2.25rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+
+    .subtext {
+      margin: 10px 0 0;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .stats {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      font-size: 0.92rem;
+      color: #0c4a6e;
+      background: rgba(14, 165, 233, 0.11);
+      border: 1px solid rgba(14, 165, 233, 0.24);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-weight: 600;
+    }
+
+    .grid-layout {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 20px;
+    }
+
+    .section-label {
+      display: block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #0369a1;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.84rem;
+      color: #0f172a;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .text-input {
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text-primary);
+      padding: 10px 12px;
+      font-size: 0.94rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .text-input:focus {
+      border-color: rgba(14, 165, 233, 0.8);
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .input-error {
+      border-color: rgba(239, 68, 68, 0.8);
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.14);
+    }
+
+    .feedback {
+      min-height: 1.25rem;
+      margin-bottom: 8px;
+      color: var(--error);
+      font-size: 0.83rem;
+      font-weight: 500;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      position: relative;
+      border: 0;
+      border-radius: var(--radius-sm);
+      height: 40px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #0f172a;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 8px 16px rgba(148, 163, 184, 0.26);
+      transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), background 0.22s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 22px rgba(148, 163, 184, 0.28);
+    }
+
+    .btn-primary {
+      background: linear-gradient(140deg, var(--accent), var(--accent-dark));
+      color: #f8fafc;
+      box-shadow: 0 10px 20px rgba(14, 165, 233, 0.36);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 14px 26px rgba(14, 165, 233, 0.42);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.14);
+      color: #b91c1c;
+      box-shadow: none;
+      border: 1px solid rgba(239, 68, 68, 0.22);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+      box-shadow: none;
+    }
+
+    .btn-ghost {
+      box-shadow: none;
+      border: 1px solid rgba(148, 163, 184, 0.36);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn-small {
+      height: 34px;
+      padding: 0 11px;
+      font-size: 0.82rem;
+      border-radius: 9px;
+    }
+
+    .tooltip::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%) translateY(4px);
+      background: rgba(15, 23, 42, 0.92);
+      color: #f8fafc;
+      font-size: 0.72rem;
+      border-radius: 7px;
+      padding: 4px 7px;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .tooltip:hover::after,
+    .tooltip:focus-visible::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .search-wrap {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .bookmark-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .bookmark-card {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      box-shadow: 0 10px 22px rgba(148, 163, 184, 0.22);
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), opacity 0.25s var(--ease);
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .bookmark-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(148, 163, 184, 0.3);
+    }
+
+    .bookmark-card.enter {
+      animation: cardEnter 0.32s var(--ease) both;
+    }
+
+    .bookmark-card.exit {
+      animation: cardExit 0.26s ease forwards;
+      pointer-events: none;
+    }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes cardExit {
+      from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.96);
+      }
+    }
+
+    .favicon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(241, 245, 249, 0.95);
+      border: 1px solid rgba(203, 213, 225, 0.72);
+      object-fit: cover;
+      margin-top: 1px;
+    }
+
+    .bookmark-name {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.3;
+    }
+
+    .bookmark-url {
+      margin: 3px 0 10px;
+      font-size: 0.8rem;
+      color: #64748b;
+      line-height: 1.25;
+      word-break: break-all;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .empty-state {
+      padding: 34px 14px;
+      text-align: center;
+      color: var(--text-muted);
+      border: 1px dashed rgba(148, 163, 184, 0.46);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.4);
+      font-size: 0.92rem;
+    }
+
+    .toast-stack {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      z-index: 60;
+      pointer-events: none;
+    }
+
+    .toast {
+      min-width: 220px;
+      max-width: min(320px, calc(100vw - 28px));
+      padding: 10px 12px;
+      border-radius: 11px;
+      background: rgba(15, 23, 42, 0.9);
+      color: #e2e8f0;
+      font-size: 0.84rem;
+      box-shadow: 0 14px 22px rgba(15, 23, 42, 0.28);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: toastIn 0.2s ease forwards;
+    }
+
+    .toast.success {
+      border-left: 3px solid #22c55e;
+    }
+
+    .toast.danger {
+      border-left: 3px solid #ef4444;
+    }
+
+    @keyframes toastIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .loader {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(155deg, var(--bg-start), var(--bg-end));
+      display: grid;
+      place-items: center;
+      z-index: 90;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-ring {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 4px solid rgba(148, 163, 184, 0.35);
+      border-top-color: var(--accent);
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app-shell {
+        padding: 22px 12px 34px;
+      }
+
+      .button-row {
+        flex-wrap: wrap;
+      }
+
+      .search-wrap {
+        flex-direction: column;
+      }
+
+      .bookmark-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
+
+  <main class="app-shell">
+    <div class="page-glow"></div>
+    <div class="content">
+      <header class="glass-panel panel">
+        <h1 class="headline">Bookmark Saver Application</h1>
+        <p class="subtext">Save, search, and manage your favorite websites with persistent local storage.</p>
+        <div class="stats" aria-live="polite">
+          <span>Total Bookmarks:</span>
+          <strong id="bookmarkCounter">0</strong>
+        </div>
+      </header>
+
+      <section class="grid-layout" aria-label="Bookmark manager">
+        <div class="glass-panel panel">
+          <span class="section-label">Add Bookmark</span>
+          <form id="bookmarkForm" novalidate>
+            <div class="field">
+              <label class="field-label" for="siteNameInput">Website Name</label>
+              <input class="text-input" id="siteNameInput" name="siteName" type="text" placeholder="Example: MDN Web Docs" maxlength="80" autocomplete="off" />
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="siteUrlInput">Website URL</label>
+              <input class="text-input" id="siteUrlInput" name="siteUrl" type="url" placeholder="https://developer.mozilla.org" maxlength="200" autocomplete="off" />
+            </div>
+
+            <p class="feedback" id="formFeedback" role="alert" aria-live="polite"></p>
+
+            <div class="button-row">
+              <button class="btn btn-primary tooltip" type="submit" data-tooltip="Save bookmark">Add Bookmark</button>
+              <button class="btn btn-ghost tooltip" type="reset" data-tooltip="Clear inputs">Reset</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="glass-panel panel">
+          <div class="search-wrap">
+            <input class="text-input" id="searchInput" type="search" placeholder="Search by bookmark name" aria-label="Search bookmarks" />
+          </div>
+
+          <div id="bookmarkList" class="bookmark-grid" aria-live="polite"></div>
+          <div id="emptyState" class="empty-state">No bookmarks saved yet. Add your first website to get started.</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = 'bookmark-saver-app:v1';
+      const FALLBACK_FAVICON = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="14" fill="%23e2e8f0"/%3E%3Cpath d="M19 20h26v24H19z" fill="%23cbd5e1"/%3E%3Cpath d="M22 24h20v3H22zm0 6h14v3H22zm0 6h20v3H22z" fill="%2364758b"/%3E%3C/svg%3E';
+
+      const state = {
+        bookmarks: [],
+        searchQuery: ''
+      };
+
+      const ui = {
+        form: document.getElementById('bookmarkForm'),
+        nameInput: document.getElementById('siteNameInput'),
+        urlInput: document.getElementById('siteUrlInput'),
+        feedback: document.getElementById('formFeedback'),
+        searchInput: document.getElementById('searchInput'),
+        list: document.getElementById('bookmarkList'),
+        counter: document.getElementById('bookmarkCounter'),
+        emptyState: document.getElementById('emptyState'),
+        toastStack: document.getElementById('toastStack'),
+        loader: document.getElementById('loader')
+      };
+
+      function initialize() {
+        state.bookmarks = readBookmarksFromStorage();
+        attachEvents();
+        renderBookmarks();
+        requestAnimationFrame(() => {
+          setTimeout(() => ui.loader.classList.add('hidden'), 320);
+        });
+      }
+
+      function attachEvents() {
+        ui.form.addEventListener('submit', onAddBookmark);
+        ui.form.addEventListener('reset', clearValidation);
+        ui.searchInput.addEventListener('input', onSearchInput);
+        ui.list.addEventListener('click', onBookmarkActions);
+      }
+
+      function onAddBookmark(event) {
+        event.preventDefault();
+        clearValidation();
+
+        const rawName = ui.nameInput.value.trim();
+        const rawUrl = ui.urlInput.value.trim();
+        const normalizedUrl = normalizeUrl(rawUrl);
+        const validationError = validateBookmark(rawName, normalizedUrl);
+
+        if (validationError) {
+          setValidationError(validationError);
+          return;
+        }
+
+        const bookmark = {
+          id: createId(),
+          name: rawName,
+          url: normalizedUrl,
+          hostname: getHostname(normalizedUrl)
+        };
+
+        state.bookmarks.unshift(bookmark);
+        persistBookmarks();
+        renderBookmarks({ animatedId: bookmark.id });
+        ui.form.reset();
+        ui.nameInput.focus();
+        showToast('Bookmark added successfully.', 'success');
+      }
+
+      function onSearchInput(event) {
+        state.searchQuery = event.target.value.trim().toLowerCase();
+        renderBookmarks();
+      }
+
+      function onBookmarkActions(event) {
+        const target = event.target.closest('[data-action]');
+        if (!target) return;
+
+        const card = target.closest('[data-bookmark-id]');
+        if (!card) return;
+
+        const bookmarkId = card.dataset.bookmarkId;
+        if (target.dataset.action === 'delete') {
+          removeBookmark(bookmarkId, card);
+          return;
+        }
+
+        if (target.dataset.action === 'copy') {
+          const bookmark = state.bookmarks.find((item) => item.id === bookmarkId);
+          if (!bookmark) return;
+          copyToClipboard(bookmark.url);
+        }
+      }
+
+      function removeBookmark(bookmarkId, cardElement) {
+        const index = state.bookmarks.findIndex((item) => item.id === bookmarkId);
+        if (index === -1) return;
+
+        state.bookmarks.splice(index, 1);
+        persistBookmarks();
+        cardElement.classList.add('exit');
+
+        cardElement.addEventListener(
+          'animationend',
+          () => {
+            renderBookmarks();
+          },
+          { once: true }
+        );
+
+        showToast('Bookmark deleted.', 'danger');
+      }
+
+      function renderBookmarks(options = {}) {
+        const { animatedId = null } = options;
+        const filtered = getFilteredBookmarks();
+
+        ui.list.innerHTML = '';
+        if (filtered.length === 0) {
+          const hasBookmarks = state.bookmarks.length > 0;
+          ui.emptyState.textContent = hasBookmarks
+            ? 'No bookmarks match your search. Try a different keyword.'
+            : 'No bookmarks saved yet. Add your first website to get started.';
+          ui.emptyState.hidden = false;
+        } else {
+          ui.emptyState.hidden = true;
+        }
+
+        filtered.forEach((bookmark) => {
+          const card = document.createElement('article');
+          card.className = 'bookmark-card';
+          if (animatedId === bookmark.id) {
+            card.classList.add('enter');
+          }
+          card.dataset.bookmarkId = bookmark.id;
+
+          const safeName = escapeHtml(bookmark.name);
+          const safeUrl = escapeHtml(bookmark.url);
+          const faviconUrl = `https://www.google.com/s2/favicons?sz=64&domain_url=${encodeURIComponent(bookmark.url)}`;
+
+          card.innerHTML = `
+            <img class="favicon" src="${faviconUrl}" alt="${safeName} favicon" loading="lazy" referrerpolicy="no-referrer" />
+            <div>
+              <h3 class="bookmark-name">${safeName}</h3>
+              <p class="bookmark-url">${safeUrl}</p>
+              <div class="card-actions">
+                <a class="btn btn-primary btn-small tooltip" href="${safeUrl}" target="_blank" rel="noopener noreferrer" data-tooltip="Open in new tab">Open</a>
+                <button class="btn btn-ghost btn-small tooltip" type="button" data-action="copy" data-tooltip="Copy URL">Copy URL</button>
+                <button class="btn btn-danger btn-small tooltip" type="button" data-action="delete" data-tooltip="Delete bookmark">Delete</button>
+              </div>
+            </div>
+          `;
+
+          const icon = card.querySelector('.favicon');
+          icon.addEventListener('error', () => {
+            icon.src = FALLBACK_FAVICON;
+          });
+
+          ui.list.appendChild(card);
+        });
+
+        ui.counter.textContent = String(state.bookmarks.length);
+      }
+
+      function getFilteredBookmarks() {
+        if (!state.searchQuery) {
+          return state.bookmarks;
+        }
+
+        return state.bookmarks.filter((bookmark) => bookmark.name.toLowerCase().includes(state.searchQuery));
+      }
+
+      function validateBookmark(name, url) {
+        if (!name) {
+          ui.nameInput.classList.add('input-error');
+          return 'Website name is required.';
+        }
+
+        if (!url) {
+          ui.urlInput.classList.add('input-error');
+          return 'Website URL is required.';
+        }
+
+        if (!isValidUrl(url)) {
+          ui.urlInput.classList.add('input-error');
+          return 'Please enter a valid URL. Example: https://example.com';
+        }
+
+        const duplicate = state.bookmarks.some((bookmark) => {
+          const sameName = bookmark.name.toLowerCase() === name.toLowerCase();
+          const sameUrl = normalizeComparableUrl(bookmark.url) === normalizeComparableUrl(url);
+          return sameName || sameUrl;
+        });
+
+        if (duplicate) {
+          ui.nameInput.classList.add('input-error');
+          ui.urlInput.classList.add('input-error');
+          return 'This bookmark already exists.';
+        }
+
+        return '';
+      }
+
+      function setValidationError(message) {
+        ui.feedback.textContent = message;
+      }
+
+      function clearValidation() {
+        ui.feedback.textContent = '';
+        ui.nameInput.classList.remove('input-error');
+        ui.urlInput.classList.remove('input-error');
+      }
+
+      function persistBookmarks() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.bookmarks));
+        } catch (error) {
+          showToast('Could not save bookmarks to local storage.', 'danger');
+          console.error(error);
+        }
+      }
+
+      function readBookmarksFromStorage() {
+        try {
+          const storedValue = localStorage.getItem(STORAGE_KEY);
+          if (!storedValue) return [];
+          const parsed = JSON.parse(storedValue);
+          if (!Array.isArray(parsed)) return [];
+
+          return parsed.filter((item) => item && typeof item.id === 'string' && typeof item.name === 'string' && typeof item.url === 'string');
+        } catch (error) {
+          console.error(error);
+          showToast('Stored bookmarks were corrupted and were reset.', 'danger');
+          return [];
+        }
+      }
+
+      function copyToClipboard(text) {
+        if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+          showToast('Clipboard API is unavailable in this browser.', 'danger');
+          return;
+        }
+
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            showToast('URL copied to clipboard.', 'success');
+          })
+          .catch(() => {
+            showToast('Could not copy URL.', 'danger');
+          });
+      }
+
+      function normalizeUrl(url) {
+        if (!url) return '';
+        const withScheme = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+        return withScheme;
+      }
+
+      function normalizeComparableUrl(url) {
+        try {
+          const parsed = new URL(normalizeUrl(url));
+          const path = parsed.pathname === '/' ? '' : parsed.pathname.replace(/\/$/, '');
+          return `${parsed.protocol}//${parsed.hostname}${path}${parsed.search}`.toLowerCase();
+        } catch {
+          return url.trim().toLowerCase();
+        }
+      }
+
+      function isValidUrl(url) {
+        try {
+          const parsed = new URL(url);
+          return ['http:', 'https:'].includes(parsed.protocol) && Boolean(parsed.hostname);
+        } catch {
+          return false;
+        }
+      }
+
+      function getHostname(url) {
+        try {
+          return new URL(url).hostname;
+        } catch {
+          return '';
+        }
+      }
+
+      function createId() {
+        return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+      }
+
+      function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        ui.toastStack.appendChild(toast);
+
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(10px)';
+          setTimeout(() => toast.remove(), 200);
+        }, 2100);
+      }
+
+      function escapeHtml(value) {
+        const temp = document.createElement('div');
+        temp.textContent = value;
+        return temp.innerHTML;
+      }
+
+      initialize();
+    })();
+  </script>
+</body>
+</html>
