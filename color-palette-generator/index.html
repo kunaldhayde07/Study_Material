@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Random Color Palette Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Random Color Palette Generator</h1>
+          <p class="subtitle">Generate, lock, save, and export palettes.</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="generateBtn" type="button">
+          <span class="kbd">Space</span>
+          Generate
+        </button>
+
+        <button class="btn" id="saveBtn" type="button">Save</button>
+
+        <div class="dropdown" id="exportDropdown">
+          <button class="btn" id="exportBtn" type="button" aria-haspopup="menu" aria-expanded="false">Export</button>
+          <div class="menu" role="menu" aria-label="Export palette">
+            <button class="menu-item" type="button" data-export="css">Copy CSS variables</button>
+            <button class="menu-item" type="button" data-export="json">Copy JSON</button>
+            <button class="menu-item" type="button" data-export="all">Copy full palette</button>
+          </div>
+        </div>
+
+        <label class="toggle" title="Toggle dark mode">
+          <input id="themeToggle" type="checkbox" />
+          <span class="track" aria-hidden="true"><span class="thumb"></span></span>
+          <span class="toggle-label">Dark</span>
+        </label>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="palette" id="palette" aria-label="Current palette">
+        <!-- color cards injected by script.js -->
+      </section>
+
+      <aside class="side">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>History</h2>
+            <button class="btn btn-ghost" id="clearHistoryBtn" type="button">Clear</button>
+          </div>
+          <div class="history" id="history" aria-label="Recent palettes"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Saved</h2>
+            <button class="btn btn-ghost" id="clearSavedBtn" type="button">Clear</button>
+          </div>
+          <div class="saved" id="saved" aria-label="Saved palettes"></div>
+        </section>
+
+        <section class="panel hints">
+          <h2>Shortcuts</h2>
+          <ul>
+            <li><span class="kbd">Space</span> generate palette</li>
+            <li><span class="kbd">L</span> lock/unlock selected</li>
+            <li><span class="kbd">C</span> copy selected HEX</li>
+            <li><span class="kbd">1–5</span> select color</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
