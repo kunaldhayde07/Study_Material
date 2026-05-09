@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Life Dashboard - All-in-One Personal Control Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Theme Toggle Button -->
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>📊 Dashboard</h2>
+            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        </div>
+        
+        <!-- Profile Section in Sidebar -->
+        <div class="sidebar-profile">
+            <div class="profile-avatar" id="profileAvatar">👤</div>
+            <div class="profile-info">
+                <h3 class="profile-name" id="profileName">Your Name</h3>
+                <p class="profile-mantra" id="profileMantra">Make today amazing!</p>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#profile" class="nav-item" data-section="profile">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">My Profile</span>
+            </a>
+            <a href="#goals" class="nav-item active" data-section="goals">
+                <span class="nav-icon">🎯</span>
+                <span class="nav-text">Daily Goals</span>
+            </a>
+            <a href="#habits" class="nav-item" data-section="habits">
+                <span class="nav-icon">🔥</span>
+                <span class="nav-text">Habit Streaks</span>
+            </a>
+            <a href="#timer" class="nav-item" data-section="timer">
+                <span class="nav-icon">⏱️</span>
+                <span class="nav-text">Focus Timer</span>
+            </a>
+            <a href="#expenses" class="nav-item" data-section="expenses">
+                <span class="nav-icon">💰</span>
+                <span class="nav-text">Expenses</span>
+            </a>
+            <a href="#notes" class="nav-item" data-section="notes">
+                <span class="nav-icon">📝</span>
+                <span class="nav-text">Quick Notes</span>
+            </a>
+            <a href="#weather" class="nav-item" data-section="weather">
+                <span class="nav-icon">🌤️</span>
+                <span class="nav-text">Weather</span>
+            </a>
+            <a href="#quote" class="nav-item" data-section="quote">
+                <span class="nav-icon">💡</span>
+                <span class="nav-text">Motivation</span>
+            </a>
+            <a href="#productivity" class="nav-item" data-section="productivity">
+                <span class="nav-icon">📈</span>
+                <span class="nav-text">Productivity</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="header-title" id="greetingText">Good Morning</h1>
+                <p class="header-date" id="currentDate">Loading...</p>
+            </div>
+        </header>
+
+        <!-- Dashboard Sections -->
+        <div class="dashboard-sections">
+            
+            <!-- Profile Section -->
+            <section class="dashboard-section" id="section-profile">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">👤 My Profile</h2>
+                        <button class="btn btn-primary" id="saveProfileBtn">Save Profile</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="profile-editor">
+                            <div class="profile-editor-header">
+                                <div class="profile-avatar-large" id="profileAvatarLarge">
+                                    <div class="avatar-preview" id="avatarPreview">👤</div>
+                                    <div class="avatar-options">
+                                        <button class="avatar-option" data-avatar="👤">👤</button>
+                                        <button class="avatar-option" data-avatar="🚀">🚀</button>
+                                        <button class="avatar-option" data-avatar="🌟">🌟</button>
+                                        <button class="avatar-option" data-avatar="🎯">🎯</button>
+                                        <button class="avatar-option" data-avatar="🔥">🔥</button>
+                                        <button class="avatar-option" data-avatar="💪">💪</button>
+                                        <button class="avatar-option" data-avatar="✨">✨</button>
+                                        <button class="avatar-option" data-avatar="🎨">🎨</button>
+                                    </div>
+                                </div>
+                                <div class="profile-basic-info">
+                                    <div class="form-group">
+                                        <label for="profileNameInput">Your Name</label>
+                                        <input type="text" id="profileNameInput" class="input" placeholder="Enter your name" maxlength="30">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profileMantraInput">Daily Mantra</label>
+                                        <input type="text" id="profileMantraInput" class="input" placeholder="Your motivational mantra" maxlength="60">
+                                        <small class="form-hint">This appears in your sidebar for daily motivation</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Personalization Options -->
+                            <div class="personalization-section">
+                                <h3>Personalize Your Dashboard</h3>
+                                <div class="color-options">
+                                    <h4>Accent Color</h4>
+                                    <div class="color-palette">
+                                        <button class="color-option active" data-color="indigo" style="background-color: #4f46e5;"></button>
+                                        <button class="color-option" data-color="blue" style="background-color: #3b82f6;"></button>
+                                        <button class="color-option" data-color="purple" style="background-color: #8b5cf6;"></button>
+                                        <button class="color-option" data-color="pink" style="background-color: #ec4899;"></button>
+                                        <button class="color-option" data-color="green" style="background-color: #10b981;"></button>
+                                        <button class="color-option" data-color="orange" style="background-color: #f59e0b;"></button>
+                                        <button class="color-option" data-color="red" style="background-color: #ef4444;"></button>
+                                        <button class="color-option" data-color="teal" style="background-color: #14b8a6;"></button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Achievements -->
+                                <div class="achievements-section">
+                                    <h4>Your Achievements</h4>
+                                    <div class="achievements-grid" id="achievementsGrid">
+                                        <!-- Achievements will be rendered here -->
+                                    </div>
+                                </div>
+
+                                <!-- Dashboard Stats -->
+                                <div class="profile-stats">
+                                    <h4>Your Dashboard Stats</h4>
+                                    <div class="stats-grid">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">🎯</div>
+                                            <div class="stat-content">
+                                                <div class="stat-value" id="profileGoalsCompleted">0</div>
+                                                <div class="stat-label">Goals Completed</div>
+                                            </div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-icon">🔥</div>
+                                            <div class="stat-content">
+                                                <div class="stat-value" id="profileHabitStreak">0</div>
+                                                <div class="stat-label">Current Habit Streak</div>
+                                            </div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-icon">⏱️</div>
+                                            <div class="stat-content">
+                                                <div class="stat-value" id="profileFocusTime">0</div>
+                                                <div class="stat-label">Focus Minutes</div>
+                                            </div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-icon">📊</div>
+                                            <div class="stat-content">
+                                                <div class="stat-value" id="profileProductivity">0</div>
+                                                <div class="stat-label">Productivity Score</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Daily Goals Section -->
+            <section class="dashboard-section active" id="section-goals">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">🎯 Daily Goals</h2>
+                        <button class="btn btn-primary" id="addGoalBtn">+ Add Goal</button>
+                    </div>
+                    <div class="card-body">
+                        <!-- Goal Input Form -->
+                        <div class="goal-input-container hidden" id="goalInputContainer">
+                            <input type="text" id="goalInput" class="input" placeholder="Enter your goal..." maxlength="100">
+                            <div class="btn-group">
+                                <button class="btn btn-success" id="saveGoalBtn">Save</button>
+                                <button class="btn btn-secondary" id="cancelGoalBtn">Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="goalProgress" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text" id="goalProgressText">0% Complete</span>
+                        </div>
+
+                        <!-- Filter Buttons -->
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="pending">Pending</button>
+                            <button class="filter-btn" data-filter="completed">Completed</button>
+                        </div>
+
+                        <!-- Goals List -->
+                        <ul class="goals-list" id="goalsList">
+                            <!-- Goals will be rendered here -->
+                        </ul>
+
+                        <!-- Empty State -->
+                        <div class="empty-state" id="goalsEmptyState">
+                            <div class="empty-icon">🎯</div>
+                            <p>No goals yet. Start by adding your first goal!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Habit Streak Section -->
+            <section class="dashboard-section" id="section-habits">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">🔥 Habit Streaks</h2>
+                        <button class="btn btn-primary" id="addHabitBtn">+ Add Habit</button>
+                    </div>
+                    <div class="card-body">
+                        <!-- Habit Input Form -->
+                        <div class="habit-input-container hidden" id="habitInputContainer">
+                            <input type="text" id="habitInput" class="input" placeholder="Enter habit name..." maxlength="50">
+                            <div class="btn-group">
+                                <button class="btn btn-success" id="saveHabitBtn">Save</button>
+                                <button class="btn btn-secondary" id="cancelHabitBtn">Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- Habits List -->
+                        <div class="habits-grid" id="habitsList">
+                            <!-- Habits will be rendered here -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div class="empty-state" id="habitsEmptyState">
+                            <div class="empty-icon">🔥</div>
+                            <p>No habits tracked yet. Create your first habit!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Focus Timer Section -->
+            <section class="dashboard-section" id="section-timer">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">⏱️ Focus Timer</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="timer-container">
+                            <div class="timer-display" id="timerDisplay">25:00</div>
+                            <div class="timer-settings">
+                                <div class="time-input-group">
+                                    <label for="studyMinutes">Study Duration (min)</label>
+                                    <input type="number" id="studyMinutes" class="input time-input" min="1" max="120" value="25">
+                                </div>
+                                <div class="time-input-group">
+                                    <label for="breakMinutes">Break Duration (min)</label>
+                                    <input type="number" id="breakMinutes" class="input time-input" min="1" max="60" value="5">
+                                </div>
+                            </div>
+                            <div class="timer-mode">
+                                <button class="mode-btn active" data-mode="study">Study</button>
+                                <button class="mode-btn" data-mode="break">Break</button>
+                            </div>
+                            <div class="timer-controls">
+                                <button class="btn btn-lg btn-primary" id="timerStartBtn">Start</button>
+                                <button class="btn btn-lg btn-secondary" id="timerResetBtn">Reset</button>
+                            </div>
+                            <div class="timer-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Sessions Today</span>
+                                    <span class="stat-value" id="sessionCount">0</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Focus Time Today</span>
+                                    <span class="stat-value" id="focusTime">0 min</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expenses Section -->
+            <section class="dashboard-section" id="section-expenses">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">💰 Expense Tracker</h2>
+                        <div class="today-total">
+                            Today: $<span id="todayTotal">0.00</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Expense Input Form -->
+                        <div class="expense-input-container">
+                            <input type="number" id="expenseAmount" class="input" placeholder="Amount" min="0" step="0.01">
+                            <select id="expenseCategory" class="input">
+                                <option value="">Select Category</option>
+                                <option value="Food">🍔 Food</option>
+                                <option value="Transport">🚗 Transport</option>
+                                <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Entertainment">🎬 Entertainment</option>
+                                <option value="Bills">📄 Bills</option>
+                                <option value="Other">📦 Other</option>
+                            </select>
+                            <button class="btn btn-primary" id="addExpenseBtn">Add</button>
+                        </div>
+
+                        <!-- Category Summary -->
+                        <div class="category-summary" id="categorySummary">
+                            <!-- Categories will be rendered here -->
+                        </div>
+
+                        <!-- Expenses List -->
+                        <div class="expenses-list" id="expensesList">
+                            <!-- Expenses will be rendered here -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div class="empty-state" id="expensesEmptyState">
+                            <div class="empty-icon">💰</div>
+                            <p>No expenses logged today. Start tracking!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notes Section -->
+            <section class="dashboard-section" id="section-notes">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">📝 Quick Notes</h2>
+                        <button class="btn btn-primary" id="addNoteBtn">+ Add Note</button>
+                    </div>
+                    <div class="card-body">
+                        <!-- Note Input Form -->
+                        <div class="note-input-container hidden" id="noteInputContainer">
+                            <textarea id="noteInput" class="textarea" placeholder="Write your note..." maxlength="500"></textarea>
+                            <div class="note-input-footer">
+                                <span class="char-counter" id="charCounter">0/500</span>
+                                <div class="btn-group">
+                                    <button class="btn btn-success" id="saveNoteBtn">Save</button>
+                                    <button class="btn btn-secondary" id="cancelNoteBtn">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes Grid -->
+                        <div class="notes-grid" id="notesList">
+                            <!-- Notes will be rendered here -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div class="empty-state" id="notesEmptyState">
+                            <div class="empty-icon">📝</div>
+                            <p>No notes yet. Capture your thoughts!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weather Section -->
+            <section class="dashboard-section" id="section-weather">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">🌤️ Weather</h2>
+                        <button class="btn btn-secondary" id="useLocationBtn" title="Use my location">
+                            📍 My Location
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <!-- Weather Search -->
+                        <div class="weather-search-container">
+                            <div class="weather-search">
+                                <input type="text" id="cityInput" class="input" placeholder="Enter city, country (e.g., Tokyo, Japan)">
+                                <button class="btn btn-primary" id="searchWeatherBtn">🔍 Search</button>
+                            </div>
+                            <p class="weather-search-hint">Search any city worldwide to get real-time weather data</p>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div class="loading-skeleton hidden" id="weatherLoading">
+                            <div class="weather-loading-content">
+                                <div class="skeleton skeleton-circle"></div>
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-text"></div>
+                                <div class="skeleton skeleton-text-sm"></div>
+                            </div>
+                        </div>
+
+                        <!-- Weather Display -->
+                        <div class="weather-display hidden" id="weatherDisplay">
+                            <div class="weather-main">
+                                <div class="weather-icon" id="weatherIcon">☀️</div>
+                                <div class="weather-temp-container">
+                                    <div class="weather-temp" id="weatherTemp">--°C</div>
+                                    <div class="weather-feels-like" id="weatherFeelsLike">Feels like --°C</div>
+                                </div>
+                            </div>
+                            <div class="weather-condition" id="weatherCondition">--</div>
+                            <div class="weather-city" id="weatherCity">
+                                <span class="city-icon">📍</span>
+                                <span class="city-name">--</span>
+                            </div>
+                            <div class="weather-details">
+                                <div class="weather-detail-item">
+                                    <div class="detail-icon">💧</div>
+                                    <div class="detail-info">
+                                        <span class="detail-label">Humidity</span>
+                                        <span class="detail-value" id="weatherHumidity">--%</span>
+                                    </div>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <div class="detail-icon">💨</div>
+                                    <div class="detail-info">
+                                        <span class="detail-label">Wind</span>
+                                        <span class="detail-value" id="weatherWind">-- km/h</span>
+                                    </div>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <div class="detail-icon">🌧️</div>
+                                    <div class="detail-info">
+                                        <span class="detail-label">Precipitation</span>
+                                        <span class="detail-value" id="weatherPrecipitation">-- mm</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error State -->
+                        <div class="error-state hidden" id="weatherError">
+                            <div class="error-icon">⚠️</div>
+                            <p id="weatherErrorMessage">Location not found. Please try a different city or country.</p>
+                            <button class="btn btn-secondary mt-2" onclick="Weather.getUserLocation()">
+                                📍 Use My Location Instead
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quote Section -->
+            <section class="dashboard-section" id="section-quote">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">💡 Daily Motivation</h2>
+                        <button class="btn btn-secondary" id="refreshQuoteBtn">🔄 Refresh</button>
+                    </div>
+                    <div class="card-body">
+                        <!-- Loading State -->
+                        <div class="loading-skeleton hidden" id="quoteLoading">
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text"></div>
+                        </div>
+
+                        <!-- Quote Display -->
+                        <div class="quote-display" id="quoteDisplay">
+                            <blockquote class="quote-text" id="quoteText">
+                                "The only way to do great work is to love what you do."
+                            </blockquote>
+                            <cite class="quote-author" id="quoteAuthor">— Steve Jobs</cite>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Productivity Score Section -->
+            <section class="dashboard-section" id="section-productivity">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">📈 Productivity Score</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="productivity-container">
+                            <!-- Circular Progress -->
+                            <div class="circular-progress">
+                                <svg class="progress-ring" width="200" height="200">
+                                    <circle class="progress-ring-circle-bg" cx="100" cy="100" r="85"></circle>
+                                    <circle class="progress-ring-circle" cx="100" cy="100" r="85" id="productivityCircle"></circle>
+                                </svg>
+                                <div class="progress-ring-text">
+                                    <span class="progress-ring-score" id="productivityScore">0</span>
+                                    <span class="progress-ring-label">/100</span>
+                                </div>
+                            </div>
+
+                            <!-- Score Breakdown -->
+                            <div class="score-breakdown">
+                                <h3>Score Breakdown</h3>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Goals Completed</span>
+                                    <div class="breakdown-bar">
+                                        <div class="breakdown-fill" id="goalsBreakdown" style="width: 0%"></div>
+                                    </div>
+                                    <span class="breakdown-value" id="goalsBreakdownValue">0%</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Habits Checked</span>
+                                    <div class="breakdown-bar">
+                                        <div class="breakdown-fill" id="habitsBreakdown" style="width: 0%"></div>
+                                    </div>
+                                    <span class="breakdown-value" id="habitsBreakdownValue">0%</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Focus Time</span>
+                                    <div class="breakdown-bar">
+                                        <div class="breakdown-fill" id="focusBreakdown" style="width: 0%"></div>
+                                    </div>
+                                    <span class="breakdown-value" id="focusBreakdownValue">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

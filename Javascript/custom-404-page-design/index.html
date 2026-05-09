@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Modern UI</title>
+    <!-- Tailwind CSS for modern utility styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Inter Font for elegant typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --neutral-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral-bg);
+            overflow: hidden;
+        }
+
+        /* Ambient floating shapes animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            33% { transform: translateY(-30px) scale(1.05) rotate(5deg); }
+            66% { transform: translateY(15px) scale(0.95) rotate(-5deg); }
+        }
+
+        @keyframes float-reverse {
+            0%, 100% { transform: translateY(0) scale(1); }
+            33% { transform: translateY(25px) scale(0.95) rotate(-5deg); }
+            66% { transform: translateY(-20px) scale(1.05) rotate(5deg); }
+        }
+
+        .ambient-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            transition: transform 0.3s ease-out;
+        }
+
+        .ambient-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(59, 130, 246, 0.25);
+            top: -100px;
+            left: -100px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .ambient-2 {
+            width: 500px;
+            height: 500px;
+            background: rgba(139, 92, 246, 0.2);
+            bottom: -150px;
+            right: -100px;
+            animation: float-reverse 25s infinite ease-in-out;
+        }
+
+        .ambient-3 {
+            width: 300px;
+            height: 300px;
+            background: rgba(236, 72, 153, 0.15);
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float 18s infinite ease-in-out;
+        }
+
+        /* 404 Glitch & Shadow effect */
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            20% { transform: skew(-3deg); }
+            21% { transform: skew(0deg); }
+            60% { transform: skew(0deg); }
+            61% { transform: skew(2deg); }
+            62% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
+        }
+
+        .glitch-text {
+            position: relative;
+            animation: glitch-skew 4s infinite linear;
+        }
+
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .glitch-text::before {
+            color: #0ff;
+            z-index: -1;
+            transform: translateX(-2px);
+            text-shadow: 2px 0 0 rgba(0,255,255,0.7);
+            clip-path: rect(0 900px 0 0);
+            animation: noise-before 3s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::after {
+            color: #f0f;
+            z-index: -2;
+            transform: translateX(2px);
+            text-shadow: -2px 0 0 rgba(255,0,255,0.7);
+            clip-path: rect(0 900px 0 0);
+            animation: noise-after 2s infinite linear alternate-reverse;
+        }
+
+        @keyframes noise-before {
+            0% { clip-path: inset(61% 0 1% 0); }
+            10% { clip-path: inset(92% 0 1% 0); }
+            20% { clip-path: inset(15% 0 54% 0); }
+            30% { clip-path: inset(42% 0 31% 0); }
+            40% { clip-path: inset(83% 0 15% 0); }
+            50% { clip-path: inset(21% 0 61% 0); }
+            60% { clip-path: inset(3% 0 88% 0); }
+            70% { clip-path: inset(62% 0 19% 0); }
+            80% { clip-path: inset(34% 0 45% 0); }
+            90% { clip-path: inset(85% 0 2% 0); }
+            100% { clip-path: inset(11% 0 71% 0); }
+        }
+
+        @keyframes noise-after {
+            0% { clip-path: inset(21% 0 61% 0); }
+            10% { clip-path: inset(3% 0 88% 0); }
+            20% { clip-path: inset(83% 0 15% 0); }
+            30% { clip-path: inset(62% 0 19% 0); }
+            40% { clip-path: inset(34% 0 45% 0); }
+            50% { clip-path: inset(11% 0 71% 0); }
+            60% { clip-path: inset(15% 0 54% 0); }
+            70% { clip-path: inset(92% 0 1% 0); }
+            80% { clip-path: inset(42% 0 31% 0); }
+            90% { clip-path: inset(85% 0 2% 0); }
+            100% { clip-path: inset(61% 0 1% 0); }
+        }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Pulse and micro-interactions */
+        .interactive-scale {
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
+        }
+
+        .interactive-scale:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.2);
+        }
+
+        .interactive-scale:active {
+            transform: scale(0.98);
+        }
+
+        /* Page load wipe */
+        .reveal-up {
+            animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes reveal-up {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-1 { animation-delay: 0.15s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.45s; }
+        .delay-4 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 overflow-hidden select-none">
+
+    <!-- Dynamic Background Shapes -->
+    <div class="ambient-shape ambient-1" id="shape1"></div>
+    <div class="ambient-shape ambient-2" id="shape2"></div>
+    <div class="ambient-shape ambient-3" id="shape3"></div>
+
+    <!-- Main Card Container -->
+    <div class="glass-card max-w-2xl w-full p-10 md:p-16 rounded-[2.5rem] flex flex-col items-center justify-center text-center reveal-up z-10">
+        
+        <!-- Animated visual icon (Compass or magnifying glass illustration) -->
+        <div class="relative w-24 h-24 mb-8 flex items-center justify-center bg-blue-50 rounded-2xl reveal-up delay-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-blue-600 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <div class="absolute inset-0 bg-blue-200 rounded-2xl scale-110 opacity-30 animate-ping" style="animation-duration: 3s;"></div>
+        </div>
+
+        <!-- Giant 404 Headline -->
+        <h1 class="font-extrabold text-9xl text-slate-800 tracking-tight glitch-text reveal-up delay-2" data-text="404">
+            404
+        </h1>
+
+        <!-- Content Details -->
+        <div class="mt-4 mb-10 reveal-up delay-3 space-y-3">
+            <h2 class="text-3xl font-bold tracking-tight text-slate-900">
+                Page Not Found
+            </h2>
+            <p class="text-slate-600 max-w-md mx-auto text-base md:text-lg">
+                The page you’re looking for doesn’t exist or may have been moved. Let's get you back on track.
+            </p>
+        </div>
+
+        <!-- Interactive Nav Buttons -->
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center w-full max-w-xs sm:max-w-md reveal-up delay-4">
+            <button id="goBackBtn" class="interactive-scale px-6 py-3.5 flex items-center justify-center space-x-2 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl cursor-pointer w-full text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Go Back</span>
+            </button>
+
+            <button id="goHomeBtn" class="interactive-scale px-6 py-3.5 flex items-center justify-center space-x-2 bg-blue-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 cursor-pointer w-full text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7m-14 2v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span>Go to Home</span>
+            </button>
+        </div>
+
+        <!-- Quick utility links (SaaS style) -->
+        <div class="mt-12 pt-8 border-t border-slate-100 w-full flex justify-center space-x-6 text-sm text-slate-400 font-medium reveal-up delay-4">
+            <a href="#" class="hover:text-blue-600 transition-colors">Help Center</a>
+            <span class="text-slate-200">•</span>
+            <a href="#" class="hover:text-blue-600 transition-colors">Contact Support</a>
+            <span class="text-slate-200">•</span>
+            <a href="#" class="hover:text-blue-600 transition-colors">View Status</a>
+        </div>
+    </div>
+
+    <!-- Client-side Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Interactive mouse-tracking parallax for ambient background shapes
+            const shapes = [
+                document.getElementById('shape1'),
+                document.getElementById('shape2'),
+                document.getElementById('shape3')
+            ];
+
+            const movementScales = [0.03, -0.04, 0.02];
+
+            window.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                
+                const deltaX = mouseX - centerX;
+                const deltaY = mouseY - centerY;
+
+                shapes.forEach((shape, index) => {
+                    const scale = movementScales[index];
+                    const translateX = deltaX * scale;
+                    const translateY = deltaY * scale;
+                    
+                    // We keep style transitions smooth by using requestAnimationFrame
+                    requestAnimationFrame(() => {
+                        shape.style.transform = `translate(${translateX}px, ${translateY}px)`;
+                    });
+                });
+            });
+
+            // Action Buttons Hook
+            const goBackBtn = document.getElementById('goBackBtn');
+            const goHomeBtn = document.getElementById('goHomeBtn');
+
+            goBackBtn.addEventListener('click', () => {
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    // Fallback if no history exists
+                    window.location.href = '#';
+                }
+            });
+
+            goHomeBtn.addEventListener('click', () => {
+                window.location.href = '#';
+            });
+        });
+    </script>
+</body>
+</html>

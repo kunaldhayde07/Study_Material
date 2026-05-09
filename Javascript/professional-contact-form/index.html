@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional contact form with real-time validation">
+    <title>Professional Contact Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Dark Mode Toggle -->
+        <button 
+            class="theme-toggle" 
+            id="themeToggle"
+            aria-label="Toggle dark mode"
+            title="Toggle dark mode"
+        >
+            <span class="theme-icon">🌙</span>
+        </button>
+
+        <!-- Contact Form Card -->
+        <div class="form-card">
+            <header class="form-header">
+                <h1>Get In Touch</h1>
+                <p class="form-subtitle">Fill out the form below and we'll get back to you shortly</p>
+            </header>
+
+            <form id="contactForm" novalidate>
+                <!-- Full Name Field -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="fullName" 
+                            name="fullName"
+                            class="form-input"
+                            placeholder=" "
+                            autocomplete="name"
+                            aria-describedby="fullName-error fullName-hint"
+                            data-tooltip="Enter your full name (minimum 3 characters)"
+                        >
+                        <label for="fullName" class="form-label">
+                            <span class="label-icon">👤</span>
+                            Full Name
+                        </label>
+                    </div>
+                    <span class="error-message" id="fullName-error" role="alert"></span>
+                    <span class="hint-message" id="fullName-hint">Minimum 3 characters required</span>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email"
+                            class="form-input"
+                            placeholder=" "
+                            autocomplete="email"
+                            aria-describedby="email-error email-hint"
+                            data-tooltip="Enter a valid email address (e.g., user@example.com)"
+                        >
+                        <label for="email" class="form-label">
+                            <span class="label-icon">✉️</span>
+                            Email Address
+                        </label>
+                    </div>
+                    <span class="error-message" id="email-error" role="alert"></span>
+                    <span class="hint-message" id="email-hint">Must be a valid email format</span>
+                </div>
+
+                <!-- Phone Number Field -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone"
+                            class="form-input"
+                            placeholder=" "
+                            autocomplete="tel"
+                            aria-describedby="phone-error phone-hint"
+                            data-tooltip="Enter 10-digit phone number (numbers only)"
+                        >
+                        <label for="phone" class="form-label">
+                            <span class="label-icon">📱</span>
+                            Phone Number
+                        </label>
+                    </div>
+                    <span class="error-message" id="phone-error" role="alert"></span>
+                    <span class="hint-message" id="phone-hint">10 digits required (e.g., 1234567890)</span>
+                </div>
+
+                <!-- Subject Field -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <select 
+                            id="subject" 
+                            name="subject"
+                            class="form-input form-select"
+                            aria-describedby="subject-error"
+                            data-tooltip="Select the subject of your message"
+                        >
+                            <option value="" disabled selected hidden></option>
+                            <option value="general">General Inquiry</option>
+                            <option value="support">Technical Support</option>
+                            <option value="sales">Sales Question</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <label for="subject" class="form-label">
+                            <span class="label-icon">📋</span>
+                            Subject
+                        </label>
+                    </div>
+                    <span class="error-message" id="subject-error" role="alert"></span>
+                </div>
+
+                <!-- Message Field -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="message" 
+                            name="message"
+                            class="form-input form-textarea"
+                            placeholder=" "
+                            rows="5"
+                            maxlength="500"
+                            aria-describedby="message-error message-counter"
+                            data-tooltip="Enter your message (minimum 10 characters, maximum 500)"
+                        ></textarea>
+                        <label for="message" class="form-label">
+                            <span class="label-icon">💬</span>
+                            Message
+                        </label>
+                    </div>
+                    <div class="message-footer">
+                        <span class="error-message" id="message-error" role="alert"></span>
+                        <span class="char-counter" id="message-counter">0 / 500</span>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button 
+                        type="button" 
+                        class="btn btn-secondary" 
+                        id="resetBtn"
+                        aria-label="Reset form"
+                    >
+                        Reset
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="btn btn-primary" 
+                        id="submitBtn"
+                        aria-label="Submit contact form"
+                    >
+                        <span class="btn-text">Send Message</span>
+                        <span class="btn-loader" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Notification -->
+        <div class="notification success-notification" id="successNotification" role="alert" aria-live="polite">
+            <div class="notification-content">
+                <span class="notification-icon">✅</span>
+                <div>
+                    <strong>Message Sent Successfully!</strong>
+                    <p>Thank you for contacting us. We'll respond within 24 hours.</p>
+                </div>
+            </div>
+            <button class="notification-close" id="closeNotification" aria-label="Close notification">×</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

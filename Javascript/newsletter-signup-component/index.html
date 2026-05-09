@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Newsletter Signup UI">
+  <title>Newsletter Signup UI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="newsletter-card" aria-labelledby="newsletter-title">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 6C14.059 6 6 14.059 6 24s8.059 18 18 18 18-8.059 18-18S33.941 6 24 6Z" stroke="currentColor" stroke-width="2.5" opacity="0.85"/>
+          <path d="M15 24.5 21.2 30 33 18.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <p class="eyebrow">Newsletter</p>
+      <h1 id="newsletter-title">Join the product notes list</h1>
+      <p class="supporting-copy">Get thoughtful design updates, feature releases, and practical product insights once a week.</p>
+
+      <form class="signup-form" id="signup-form" novalidate>
+        <div class="field-grid">
+          <div class="field">
+            <div class="input-shell">
+              <span class="input-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6.75A2.75 2.75 0 0 1 6.75 4h10.5A2.75 2.75 0 0 1 20 6.75v10.5A2.75 2.75 0 0 1 17.25 20H6.75A2.75 2.75 0 0 1 4 17.25V6.75Z" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="m6.5 7 5.1 4.27c.24.2.59.2.83 0L17.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <input class="text-input" type="text" id="name" name="name" autocomplete="name" placeholder=" " inputmode="text">
+              <label class="floating-label" for="name">Name <span class="optional">Optional</span></label>
+            </div>
+          </div>
+
+          <div class="field" data-field="email">
+            <div class="input-shell">
+              <span class="input-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6.75A2.75 2.75 0 0 1 6.75 4h10.5A2.75 2.75 0 0 1 20 6.75v10.5A2.75 2.75 0 0 1 17.25 20H6.75A2.75 2.75 0 0 1 4 17.25V6.75Z" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="m6.5 7 5.1 4.27c.24.2.59.2.83 0L17.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <input class="text-input" type="email" id="email" name="email" autocomplete="email" placeholder=" " required>
+              <label class="floating-label" for="email">Email</label>
+            </div>
+            <p class="field-message" id="email-error" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <button class="submit-button" type="submit" id="submit-button">
+          <span class="button-label">Subscribe</span>
+          <span class="button-shine" aria-hidden="true"></span>
+        </button>
+
+        <p class="form-status" id="form-status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

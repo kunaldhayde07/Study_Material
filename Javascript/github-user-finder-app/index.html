@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="GitHub User Finder lets you search GitHub profiles and explore recent repositories with a clean, responsive interface."
+    />
+    <title>GitHub User Finder</title>
+    <link rel="preconnect" href="https://api.github.com" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero__content">
+          <span class="hero__eyebrow">GitHub API Explorer</span>
+          <h1>GitHub User Finder</h1>
+          <p class="hero__description">
+            Search for any public GitHub profile and instantly view account details,
+            activity highlights, and recent repositories.
+          </p>
+        </div>
+      </header>
+
+      <main class="app-container">
+        <section class="search-panel card" aria-labelledby="search-heading">
+          <div class="search-panel__header">
+            <div>
+              <h2 id="search-heading">Find a developer</h2>
+              <p>Search by GitHub username to load profile details and repositories.</p>
+            </div>
+          </div>
+
+          <form class="search-form" id="search-form" novalidate>
+            <label class="sr-only" for="username-input">GitHub username</label>
+            <div class="search-input-group">
+              <input
+                id="username-input"
+                name="username"
+                type="text"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                placeholder="Enter a GitHub username"
+                aria-describedby="search-feedback"
+              />
+              <button type="submit" id="search-button">Search</button>
+            </div>
+            <p id="search-feedback" class="search-feedback" aria-live="polite">
+              Try searching for users like <button type="button" class="inline-suggestion" data-username="torvalds">torvalds</button>,
+              <button type="button" class="inline-suggestion" data-username="gaearon">gaearon</button>, or
+              <button type="button" class="inline-suggestion" data-username="octocat">octocat</button>.
+            </p>
+          </form>
+        </section>
+
+        <section class="status-area" aria-live="polite" aria-atomic="true">
+          <div id="loader" class="loader card is-hidden" role="status">
+            <div class="spinner" aria-hidden="true"></div>
+            <div>
+              <h3>Loading profile</h3>
+              <p>Fetching user details and repositories from GitHub.</p>
+            </div>
+          </div>
+
+          <div id="error-message" class="message message--error card is-hidden" role="alert"></div>
+          <div id="empty-state" class="message message--empty card">
+            <h3>Start with a search</h3>
+            <p>
+              Enter a GitHub username above to view profile information, follower stats,
+              and recent repositories.
+            </p>
+          </div>
+        </section>
+
+        <section id="results" class="results is-hidden" aria-live="polite">
+          <article class="profile-card card" id="profile-card">
+            <div class="profile-card__media">
+              <div class="avatar-wrap">
+                <img id="profile-avatar" src="" alt="" />
+              </div>
+            </div>
+
+            <div class="profile-card__body">
+              <div class="profile-card__heading">
+                <div>
+                  <h2 id="profile-name"></h2>
+                  <p id="profile-username" class="profile-username"></p>
+                </div>
+                <a
+                  id="profile-link"
+                  class="profile-link"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View on GitHub
+                </a>
+              </div>
+
+              <p id="profile-bio" class="profile-bio"></p>
+
+              <div class="profile-meta" id="profile-meta"></div>
+
+              <div class="profile-stats">
+                <div class="stat">
+                  <span class="stat__label">Repositories</span>
+                  <strong class="stat__value" id="repos-count">0</strong>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Followers</span>
+                  <strong class="stat__value" id="followers-count">0</strong>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Following</span>
+                  <strong class="stat__value" id="following-count">0</strong>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <section class="repos-section card" aria-labelledby="repos-heading">
+            <div class="section-header">
+              <div>
+                <h2 id="repos-heading">Recent repositories</h2>
+                <p>Latest public repositories sorted by recent activity.</p>
+              </div>
+            </div>
+            <div id="repos-grid" class="repos-grid"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
